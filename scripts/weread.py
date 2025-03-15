@@ -208,21 +208,20 @@ def get_notebooklist():
 from datetime import datetime
 
 def get_sort():
-    """获取 Notion 数据库中最新的 Date，并返回为 datetime 对象"""
-    filter = {"property": "Date", "date": {"is_not_empty": True}}  # 确保有值
+    """获取 Notion 数据库中最新的 Progress 排序"""
+    filter = {"property": "Progress", "number": {"is_not_empty": True}}  # 确保 Progress 字段有值
     sorts = [
         {
-            "property": "Date",  # 按 Date 降序
-            "direction": "descending",
+            "property": "Progress",  # 按 Progress 升序或降序
+            "direction": "descending",  # "ascending" 是升序，"descending" 是降序
         }
     ]
     response = client.databases.query(
         database_id=database_id, filter=filter, sorts=sorts, page_size=1
     )
     if len(response.get("results")) == 1:
-        # 获取 ISO 8601 格式的日期字符串并转换为 datetime 对象
-        date_str = response.get("results")[0]["properties"]["Date"]["date"]["start"]
-        return datetime.fromisoformat(date_str)  # 转换为 datetime 对象
+        # 假设 Progress 是一个数字类型的字段，可以直接返回该值
+        return response.get("results")[0]["properties"]["Progress"]["number"]
     return None
 
 
