@@ -206,20 +206,21 @@ def get_notebooklist():
 
 
 def get_sort():
-    """获取 database 中最新的创建时间"""
-    filter = {"property": "Created time", "date": {"is_not_empty": True}}
+    """获取 Notion 数据库中最新的 Date"""
+    filter = {"property": "Date", "date": {"is_not_empty": True}}  # 确保有值
     sorts = [
         {
-            "property": "Created time",
-            "direction": "descending",  # 按创建时间降序
+            "property": "Date",  # 按 Date 降序
+            "direction": "descending",
         }
     ]
     response = client.databases.query(
         database_id=database_id, filter=filter, sorts=sorts, page_size=1
     )
     if len(response.get("results")) == 1:
-        return response.get("results")[0]["properties"]["Created time"]["date"]["start"]
+        return response.get("results")[0]["properties"]["Date"]["date"]["start"]
     return None
+
 
 
 
