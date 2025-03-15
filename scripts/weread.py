@@ -205,8 +205,10 @@ def get_notebooklist():
     return None
 
 
+from datetime import datetime
+
 def get_sort():
-    """获取 Notion 数据库中最新的 Date"""
+    """获取 Notion 数据库中最新的 Date，并返回为 datetime 对象"""
     filter = {"property": "Date", "date": {"is_not_empty": True}}  # 确保有值
     sorts = [
         {
@@ -218,7 +220,9 @@ def get_sort():
         database_id=database_id, filter=filter, sorts=sorts, page_size=1
     )
     if len(response.get("results")) == 1:
-        return response.get("results")[0]["properties"]["Date"]["date"]["start"]
+        # 获取 ISO 8601 格式的日期字符串并转换为 datetime 对象
+        date_str = response.get("results")[0]["properties"]["Date"]["date"]["start"]
+        return datetime.fromisoformat(date_str)  # 转换为 datetime 对象
     return None
 
 
