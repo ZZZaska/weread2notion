@@ -206,20 +206,21 @@ def get_notebooklist():
 
 
 def get_sort():
-    """获取database中的最新时间"""
-    filter = {"property": "Sort", "number": {"is_not_empty": True}}
+    """获取 database 中最新的创建时间"""
+    filter = {"property": "Created time", "date": {"is_not_empty": True}}
     sorts = [
         {
-            "property": "Sort",
-            "direction": "descending",
+            "property": "Created time",
+            "direction": "descending",  # 按创建时间降序
         }
     ]
     response = client.databases.query(
         database_id=database_id, filter=filter, sorts=sorts, page_size=1
     )
     if len(response.get("results")) == 1:
-        return response.get("results")[0].get("properties").get("Sort").get("number")
-    return 0
+        return response.get("results")[0]["properties"]["Created time"]["date"]["start"]
+    return None
+
 
 
 def get_children(chapter, summary, bookmark_list):
